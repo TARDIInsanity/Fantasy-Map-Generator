@@ -1,5 +1,6 @@
 import type { Route } from "@/generators/routes-generator";
 import { ensureEl } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 // custom legacy 3-arg prompt from commonUtils.initializePrompt (collides with lib.dom's var prompt)
 declare const prompt: (text: string, options: { default: string }, callback: (value: string) => void) => void;
@@ -90,17 +91,15 @@ function addGroup(): void {
 }
 
 function removeGroup(group: string): void {
-  confirmationDialog({
+  showRemoveDialog({
     title: "Remove route group",
     message:
       "Are you sure you want to remove the entire route group? All routes in this group will be removed.<br>This action can't be reverted",
-    confirm: "Remove",
     onConfirm: () => {
       pack.routes.filter((r: Route) => r.group === group).forEach(Routes.remove);
       if (!DEFAULT_GROUPS.includes(group)) routes.select(`#${group}`).remove();
       addLines();
-    }
-  });
+    }});
 }
 
 export const RouteGroupsEditor = { open };

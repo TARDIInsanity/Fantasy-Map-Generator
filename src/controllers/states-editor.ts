@@ -17,6 +17,7 @@ import {
   rn,
   si
 } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const $body = insertEditorHtml();
 addListeners();
@@ -692,7 +693,7 @@ function toggleFog(state: number, cl: DOMTokenList): void {
 function stateRemovePrompt(state: number): void {
   if (customization) return;
 
-  confirmationDialog({
+  confirmationDialog({ 
     title: "Remove state",
     message: "Are you sure you want to remove the state? <br>This action cannot be reverted",
     confirm: "Remove",
@@ -1544,19 +1545,17 @@ function openStateMergeDialog(): void {
           return;
         }
 
-        confirmationDialog({
+        showRemoveDialog({
           title: "Merge states",
           // prettier-ignore
           message: /* html */ `
             <p>The following states will be <strong>removed</strong>: ${statesToMerge.map(stateId => `${emblem(stateId)}${(pack.states)[stateId].name}`).join(", ")}.</p>
             <p>Removed states data (burgs, provinces, regiments) will be assigned to ${emblem(rullingState.i)}${rullingState.name}.</p>
             <p>Are you sure you want to merge states? This action cannot be reverted.</p>`,
-          confirm: "Merge",
           onConfirm: () => {
             mergeStates(statesToMerge, rulingStateId);
             $(this).dialog("close");
-          }
-        });
+        }});
       },
       Cancel: function (this: HTMLElement) {
         $(this).dialog("close");

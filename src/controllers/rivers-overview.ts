@@ -2,6 +2,7 @@ import { mean } from "d3";
 import { Controllers } from "@/controllers";
 import type { River } from "@/generators/river-generator";
 import { ensureEl, rn } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const DIALOG_HTML = /* html */ `
   <div id="riversHeader" class="header" style="grid-template-columns: 9em 4em 7em 5em 5em 9em">
@@ -203,25 +204,18 @@ function openRiverEditor(this: HTMLElement): void {
   void Controllers.RiverEditor.open(id);
 }
 
-function triggerRiverRemove(this: HTMLElement): void {
+function triggerRiverRemove(this: HTMLElement): void { 
   const river = +(this.parentNode as HTMLElement).dataset.id!;
-  alertMessage.innerHTML = /* html */ `Are you sure you want to remove the river? All tributaries will be auto-removed`;
-
-  $("#alert").dialog({
-    resizable: false,
-    width: "22em",
+  
+  showRemoveDialog({
     title: "Remove river",
-    buttons: {
-      Remove: function (this: any) {
+    width: "22em",
+    message: /* html */ `Are you sure you want to remove the river? All tributaries will be auto-removed`, 
+    onConfirm: () => {
         Rivers.remove(river);
         riversOverviewAddLines();
         $(this).dialog("close");
-      },
-      Cancel: function (this: any) {
-        $(this).dialog("close");
-      }
-    }
-  });
+    }});
 }
 
 function triggerAllRiversRemove(): void {

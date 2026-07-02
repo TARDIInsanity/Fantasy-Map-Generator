@@ -13,6 +13,7 @@ import {
   rn,
   si
 } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const $body = insertEditorHtml();
 addListeners();
@@ -586,12 +587,10 @@ function cultureRemovePrompt(this: HTMLElement): void {
   if (customization) return;
 
   const cultureId = +(this.parentNode as HTMLElement).dataset.id!;
-  confirmationDialog({
-    title: "Remove culture",
-    message: "Are you sure you want to remove the culture? <br>This action cannot be reverted",
-    confirm: "Remove",
-    onConfirm: () => removeCulture(cultureId)
-  });
+  showRemoveDialog({
+    title: "Remove culture", 
+    message: "Are you sure you want to remove the culture? <br>This action cannot be reverted", 
+    onConfirm: () => removeCulture(cultureId)});
 }
 
 function drawCultureCenters(): void {

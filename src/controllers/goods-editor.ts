@@ -4,6 +4,7 @@ import type { Good } from "../generators/goods-generator";
 import { isDealRecord, isMfgRecord } from "../generators/production-generator";
 import { drawGoods, toggleGoods } from "../renderers/draw-goods";
 import { ensureEl, unique } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 let isInitialized = false;
 const visibleTags = new Set<string>();
@@ -582,7 +583,7 @@ function requestProductionRegeneration() {
   });
 }
 
-function removeGood(good: Good, line: HTMLElement) {
+function removeGood(good: Good, line: HTMLElement) { 
   const message = "Are you sure you want to remove the resource? <br>This action cannot be reverted";
   const onConfirm = () => {
     for (const i of pack.cells.i) {
@@ -599,7 +600,11 @@ function removeGood(good: Good, line: HTMLElement) {
     updateDisplayAllCheckbox();
     drawGoods();
   };
-  confirmationDialog({ title: "Remove resource", message, confirm: "Remove", onConfirm });
+  showRemoveDialog({
+    title: "Remove resource", 
+    message: message, 
+    onConfirm: onConfirm
+  });
 }
 
 function closeGoodsEditor() {

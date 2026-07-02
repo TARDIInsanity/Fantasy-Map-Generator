@@ -2,6 +2,7 @@ import { type D3DragEvent, drag, easeSinInOut, pointer, select, sum, transition 
 import { Controllers } from "@/controllers";
 import type { Regiment } from "../generators/military-generator";
 import { capitalize, ensureEl, last, rn } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 let isInitialized = false;
 let selectedRegiment: SVGGElement | null = null;
@@ -461,33 +462,25 @@ function editLegend(): void {
 }
 
 function removeRegiment(): void {
-  ensureEl("alertMessage").innerHTML = "Are you sure you want to remove the regiment?";
-  $("#alert").dialog({
-    resizable: false,
-    title: "Remove regiment",
-    buttons: {
-      Remove: function () {
-        $(this).dialog("close");
-        if (!selectedRegiment) return;
-        const military = pack.states[+selectedRegiment.dataset.state!].military!;
-        const reg = getRegiment();
-        const regIndex = reg ? military.indexOf(reg) : -1;
-        if (regIndex === -1) return;
-        military.splice(regIndex, 1);
+  showRemoveDialog({
+    title: "Remove regiment", 
+    message: "Are you sure you want to remove the regiment?";
+    onConfirm: () => {
+      if (!selectedRegiment) return;
+      const military = pack.states[+selectedRegiment.dataset.state!].military!;
+      const reg = getRegiment();
+      const regIndex = reg ? military.indexOf(reg) : -1;
+      if (regIndex === -1) return;
+      military.splice(regIndex, 1);
 
-        const index = notes.findIndex(n => n.id === selectedRegiment!.id);
-        if (index !== -1) notes.splice(index, 1);
-        selectedRegiment.remove();
+      const index = notes.findIndex(n => n.id === selectedRegiment!.id);
+      if (index !== -1) notes.splice(index, 1);
+      selectedRegiment.remove();
 
-        refreshMilitaryOverviewIfOpen();
-        refreshRegimentsOverviewIfOpen();
-        $("#regimentEditor").dialog("close");
-      },
-      Cancel: function () {
-        $(this).dialog("close");
-      }
-    }
-  });
+      refreshMilitaryOverviewIfOpen();
+      refreshRegimentsOverviewIfOpen();
+      $("#regimentEditor").dialog("close");
+    }});
 }
 
 function dragRegiment(this: SVGGElement, event: D3DragEvent<SVGGElement, unknown, unknown>): void {

@@ -3,6 +3,7 @@ import { Controllers } from "@/controllers";
 import type { River } from "@/generators/river-generator";
 import type { Point } from "@/generators/voronoi";
 import { ensureEl, getPackPolygon, getSegmentId, rand, rn } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const DIALOG_HTML = /* html */ `
   <div id="riverBody" style="padding-bottom: 0.3em">
@@ -305,24 +306,17 @@ function editRiverLegend(): void {
 }
 
 function removeRiver(): void {
-  alertMessage.innerHTML = "Are you sure you want to remove the river and all its tributaries";
-  $("#alert").dialog({
-    resizable: false,
-    width: "22em",
+  showRemoveDialog({
     title: "Remove river and tributaries",
-    buttons: {
-      Remove: function (this: any) {
+    width: "22em",
+    message: "Are you sure you want to remove the river and all its tributaries", 
+    onConfirm: () => {
         $(this).dialog("close");
         const river = +elSelected.attr("id").slice(5);
         Rivers.remove(river);
         elSelected.remove();
         $("#riverEditor").dialog("close");
-      },
-      Cancel: function (this: any) {
-        $(this).dialog("close");
-      }
-    }
-  });
+    }});
 }
 
 function closeRiverEditor(): void {

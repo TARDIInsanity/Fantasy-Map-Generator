@@ -11,6 +11,7 @@ import {
   rn,
   si
 } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const $body = insertEditorHtml();
 addListeners();
@@ -516,12 +517,11 @@ function religionRemovePrompt(this: HTMLElement): void {
   if (customization) return;
 
   const religionId = +(this.parentNode as HTMLElement).dataset.id!;
-  confirmationDialog({
+  
+  showRemoveDialog({
     title: "Remove religion",
     message: "Are you sure you want to remove the religion? <br>This action cannot be reverted",
-    confirm: "Remove",
-    onConfirm: () => removeReligion(religionId)
-  });
+    onConfirm: () => removeReligion(religionId)});
 }
 
 function removeReligion(religionId: number): void {

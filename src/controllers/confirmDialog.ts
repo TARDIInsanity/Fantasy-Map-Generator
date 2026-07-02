@@ -1,47 +1,52 @@
+import JQuery from "jquery";
+
 export interface ConfirmDialogOptions {
-  selector: string;
   title: string;
+  message: string;
   width?: string;
   onConfirm: () => void;
 }
 
-// Expected usage: showConfirmDialog({this, "Remove SOMETHING", "22em", () => {}})
+// Expected usage: showRemoveDialog({selector: this, title: "Remove SOMETHING", message: "", width: "22em", onConfirm: () => {}})
 
 const NAMESPACE = "confirmDialog";
 
-export function showConfirmDialog(opts: ConfirmDialogOptions): void {
+export function showRemoveDialog(opts: ConfirmDialogOptions): void {
   const {
-    selector,
     title,
+    message,
     width = "22em",
     onConfirm
   } = opts;
+
+  const $dialog = $("#alert");
   
   const keyHandler = (e: JQuery.KeyDownEvent) => {
     if (e.key == "enter") {
       e.preventDefault();
-      $(selector).dialog("close");
+      $("#alert").dialog("close");
       onConfirm();
-    } else if (key == "escape") {
-      $(selector).dialog("close");
+    } else if (e.key == "escape") {
+      $("#alert").dialog("close");
     }
   }
 
-$dialog.dialog({
-  resizable: false,
-  width,
-  title,
-  modal: true,
-  buttons: {
-    Remove: function (this: any) {
-      $(this).dialog("close");
-      onConfirm();
+  $dialog.dialog({
+    resizable: false,
+    width: width,
+    title: title,
+    message: message,
+    modal: true,
+    buttons: {
+      Remove: function (this: any) {
+        $(this).dialog("close");
+        onConfirm();
+      },
+      Cancel: function (this: any) {
+        $(this).dialog("close");
+      }
     },
-    Cancel: function (this: any) {
-      $(this).dialog("close");
-    }
-  },
-  open: () => {$(document).on("keydown.removeConfirm", keyHandler);},
-  close: () => {$(document).off("keydown.removeConfirm");}
-});
+    open: () => {$(document).on("keydown.removeConfirm", keyHandler);},
+    close: () => {$(document).off("keydown.removeConfirm");}
+  });
 }

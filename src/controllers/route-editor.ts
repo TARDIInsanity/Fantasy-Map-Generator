@@ -2,6 +2,7 @@ import { drag, pointer, select } from "d3";
 import { Controllers } from "@/controllers";
 import type { Route } from "@/generators/routes-generator";
 import { ensureEl, getPackPolygon, getSegmentId, rn } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const DIALOG_HTML = /* html */ `
   <div id="routeBody" style="padding-bottom: 0.3em">
@@ -425,15 +426,14 @@ function updateLockIcon(): void {
 }
 
 function removeRoute(): void {
-  confirmationDialog({
-    title: "Remove route",
+  showRemoveDialog({
+    title: "Remove route", 
+    width: "22em",
     message: "Are you sure you want to remove the route? <br>This action cannot be reverted",
-    confirm: "Remove",
     onConfirm: () => {
       Routes.remove(getRoute());
       $("#routeEditor").dialog("close");
-    }
-  });
+    }});
 }
 
 function closeRouteEditor(): void {

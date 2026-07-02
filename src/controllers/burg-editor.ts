@@ -3,6 +3,7 @@ import { Controllers } from "@/controllers";
 import type { Burg } from "../generators/burgs-generator";
 import { convertTemperature, ensureEl, getTemperatureLikeness, parseTransform, rand, rn } from "../utils";
 import type { PromptOptions } from "../utils/commonUtils";
+import { showRemoveDialog } from "./confirmDialog";
 
 declare const showBurgTemperatureGraph: (id: string) => void;
 declare const prompt: (text: string, options: PromptOptions, callback: (value: string | number) => void) => void;
@@ -489,15 +490,13 @@ function removeSelectedBurg(): void {
       }
     });
   } else {
-    confirmationDialog({
-      title: "Remove burg",
-      message: "Are you sure you want to remove the burg? <br>This action cannot be reverted",
-      confirm: "Remove",
-      onConfirm: () => {
-        Burgs.remove(burgId);
-        $("#burgEditor").dialog("close");
-      }
-    });
+  showRemoveDialog({
+    title: "Remove burg", 
+    message: "Are you sure you want to remove the burg? <br>This action cannot be reverted", 
+    onConfirm: () => {
+      Burgs.remove(burgId);
+      $("#burgEditor").dialog("close");
+    }});
   }
 }
 

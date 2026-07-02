@@ -2,6 +2,7 @@ import { mean } from "d3";
 import { Controllers } from "@/controllers";
 import type { Route } from "@/generators/routes-generator";
 import { ensureEl, rn } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const DIALOG_HTML = /* html */ `
   <div id="routesHeader" class="header" style="grid-template-columns: 17em 8em 8em">
@@ -182,16 +183,14 @@ function toggleLockAll(): void {
 
 function triggerRouteRemove(this: HTMLElement): void {
   const routeId = +(this.parentNode as HTMLElement).dataset.id!;
-  confirmationDialog({
+  showRemoveDialog({
     title: "Remove route",
     message: "Are you sure you want to remove the route? <br>This action cannot be reverted",
-    confirm: "Remove",
     onConfirm: () => {
       const route = pack.routes.find((r: Route) => r.i === routeId) as Route;
       Routes.remove(route);
       routesOverviewAddLines();
-    }
-  });
+    }});
 }
 
 function triggerAllRoutesRemove(): void {

@@ -1,4 +1,5 @@
 import { ensureEl } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 const GROUP_NAME_REGEXP = /^[\p{L}_][\p{L}\p{N}_-]*$/u;
 
@@ -256,16 +257,14 @@ function removeLine(line: HTMLElement): void {
     return;
   }
 
-  confirmationDialog({
+  showRemoveDialog({
     title: "Remove group",
     message:
       "Are you sure you want to remove the group? <br>This WON'T change the burgs unless the changes are applied",
-    confirm: "Remove",
     onConfirm: () => {
       line.remove();
       validateForm();
-    }
-  });
+  }});
 }
 
 function validateForm(): boolean {

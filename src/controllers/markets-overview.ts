@@ -4,6 +4,7 @@ import type { Burg } from "../generators/burgs-generator";
 import type { Deal, Market } from "../generators/markets-generator";
 import { highlightMarketOff, highlightMarketOn } from "../renderers/draw-markets";
 import { ensureEl, findAllCellsInRadius, findClosestCell, formatPrice, getIsolines, getVertexPath, rn } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 let isInitialized = false;
 // Working copy of pack.cells.market mutated during manual assignment; applied on commit.
@@ -400,16 +401,14 @@ function confirmRemoveMarket(marketId: number): void {
   if (!market) return;
   const name = Markets.getName(market);
 
-  confirmationDialog({
+  showRemoveDialog({
     title: "Remove Market",
     message: `Are you sure you want to remove the market "${name}"?<br>This action cannot be reverted`,
-    confirm: "Remove",
     onConfirm: () => {
       Markets.removeMarket(marketId);
       if (layerIsOn("toggleMarketsLayer")) drawMarketsLayer();
       marketsOverviewAddLines();
-    }
-  });
+    }});
 }
 
 function marketChangeFill(fillBox: HTMLElement, marketId: number): void {

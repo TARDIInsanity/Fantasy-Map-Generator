@@ -1,6 +1,7 @@
 import { pack as packLayout, pointer, select, stratify } from "d3";
 import { Controllers } from "@/controllers";
 import { convertTemperature, ensureEl, getTemperatureLikeness, rn, si } from "../utils";
+import { showRemoveDialog } from "./confirmDialog";
 
 let isInitialized = false;
 
@@ -606,17 +607,15 @@ function importBurgNames(dataLoaded: string): void {
 
 function triggerAllBurgsRemove(): void {
   const number = pack.burgs.filter(b => b.i && !b.removed && !b.capital && !b.lock).length;
-  confirmationDialog({
-    title: `Remove ${number} burgs`,
+  showRemoveDialog({
+    title: `Remove ${number} burgs`, 
     message: `
         Are you sure you want to remove all <i>unlocked</i> burgs except for capitals?
         <br><i>To remove a capital you have to remove its state first</i>`,
-    confirm: "Remove",
     onConfirm: () => {
       pack.burgs.filter(b => b.i && !(b.capital || b.lock)).forEach(b => void Burgs.remove(b.i));
       burgsOverviewAddLines();
-    }
-  });
+    }});
 }
 
 function toggleLockAll(): void {
